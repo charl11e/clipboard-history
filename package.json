@@ -1,0 +1,23 @@
+{
+  "name": "clipboard-history",
+  "version": "1.0.0",
+  "description": "Keeps track of keyboard history",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charl11e/clipboard-history.git"
+  },
+  "author": "charl11e",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/charl11e/clipboard-history/issues"
+  },
+  "homepage": "https://github.com/charl11e/clipboard-history#readme",
+  "devDependencies": {
+    "electron": "^37.3.1"
+  }
+}
