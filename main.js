@@ -1,5 +1,7 @@
-const { app, BrowserWindow, clipboard } = require('electron');
+const { app, BrowserWindow, clipboard, ipcMain } = require('electron');
 const path = require('path');
+
+let mainWindow;
 
 let lastText = '';
 let history = [];
@@ -42,6 +44,22 @@ function startClipboardWatcher() {
         console.log(currentText, history);
     }, POLL_TIME);
 }
+
+ipcMain.handle('get-history', () => history);
+ipcMain.handle('clear-history', () => {
+    history = [];
+});
+ipcMain.handle('set-clipboard', (e, text) => {
+    clipboard.writeText(text);
+    lastText = text;
+});
+ipcMain.handle('delete-item', (e, text) => {
+    history = history.filter(item => item !== text);
+    if (text === lastText) {
+        lastText = '';
+    }
+});
+
 app.whenReady().then(() => {
     createWindow();
     startClipboardWatcher();
