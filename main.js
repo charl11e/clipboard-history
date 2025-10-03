@@ -41,7 +41,7 @@ function startClipboardWatcher() {
             history.pop();
         };
 
-        console.log(currentText, history);
+        broadcastHistory();
     }, POLL_TIME);
 }
 
@@ -59,6 +59,13 @@ ipcMain.handle('delete-item', (e, text) => {
         lastText = '';
     }
 });
+
+function broadcastHistory() {
+    if (mainWindow) {
+        mainWindow.webContents.send('history-updated', history);
+    }
+}
+
 
 app.whenReady().then(() => {
     createWindow();
