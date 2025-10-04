@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 function onHistoryUpdated(callback) {
-    ipcRenderer.on('history-updated', (e, history) => {
+    ipcRenderer.on('history-updated', (_e, history) => {
         callback(history);
     });
 }

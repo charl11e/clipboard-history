@@ -2,7 +2,6 @@ const { app, BrowserWindow, clipboard, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
-
 let lastText = '';
 let history = [];
 
@@ -40,25 +39,26 @@ function startClipboardWatcher() {
         if (history.length > MAX_ITEMS) {
             history.pop();
         };
-
         broadcastHistory();
     }, POLL_TIME);
 }
 
-ipcMain.handle('get-history', () => history);
-ipcMain.handle('clear-history', () => {
-    history = [];
-});
-ipcMain.handle('set-clipboard', (e, text) => {
-    clipboard.writeText(text);
-    lastText = text;
-});
-ipcMain.handle('delete-item', (e, text) => {
-    history = history.filter(item => item !== text);
-    if (text === lastText) {
-        lastText = '';
-    }
-});
+function setupIpcHandlers() {
+    ipcMain.handle('get-history', () => history);
+    ipcMain.handle('clear-history', () => {
+        history = [];
+    });
+    ipcMain.handle('set-clipboard', (_e, text) => {
+        clipboard.writeText(text);
+        lastText = text;
+    });
+    ipcMain.handle('delete-item', (_e, text) => {
+        history = history.filter(item => item !== text);
+        if (text === lastText) {
+            lastText = '';
+        }
+    });
+};
 
 function broadcastHistory() {
     if (mainWindow) {
@@ -68,9 +68,9 @@ function broadcastHistory() {
 
 
 app.whenReady().then(() => {
+    setupIpcHandlers();
     createWindow();
     startClipboardWatcher();
-
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
